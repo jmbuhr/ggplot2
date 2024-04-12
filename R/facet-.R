@@ -103,6 +103,8 @@ Facet <- ggproto("Facet", NULL,
   train_scales = function(x_scales, y_scales, layout, data, params) {
     # loop over each layer, training x and y scales in turn
     for (layer_data in data) {
+      # print(names(layer_data))
+      # print(layer_data$PANEL)
       match_id <- NULL
 
       if (!is.null(x_scales)) {

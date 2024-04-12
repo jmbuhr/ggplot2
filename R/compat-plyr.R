@@ -103,6 +103,8 @@ id <- function(.variables, drop = FALSE) {
     return(id_var(.variables[[1]], drop = drop))
   }
   ids <- rev(lapply(.variables, id_var, drop = drop))
+  print('ids')
+  print(ids)
   p <- length(ids)
   ndistinct <- vapply(ids, attr, "n", FUN.VALUE = numeric(1), USE.NAMES = FALSE)
   n <- prod(ndistinct)
@@ -163,6 +165,16 @@ join_keys <- function(x, y, by) {
   keys <- id(joint, drop = TRUE)
   n_x <- nrow(x)
   n_y <- nrow(y)
+  print(by)
+  print(n_x)
+  print(n_y)
+  print(y)
+
+  print(length(joint))
+
+  print(n_x + seq_len(n_y))
+  print(keys[n_x + seq_len(n_y)])
+
   list(x = keys[seq_len(n_x)], y = keys[n_x + seq_len(n_y)],
        n = attr(keys, "n"))
 }

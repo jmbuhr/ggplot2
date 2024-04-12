@@ -331,7 +331,22 @@ FacetGrid <- ggproto("FacetGrid", Facet,
 
       keys <- join_keys(facet_vals, layout, by = vars)
 
-      data$PANEL <- layout$PANEL[match(keys$x, keys$y)]
+      # DEBUG
+      print('x')
+      # print(keys$x)
+      print('y')
+      print(keys$y)
+      # 2 is sometimes missing from keys$y
+      # worse..
+      # should be
+      #  [1]  1  2  3  4  5  6  7  8  9 10
+      # is randomly
+      #  [1]  1  3  5  7  9 10 11 13 14 15
+      m <- match(keys$x, keys$y)
+      print('m')
+      # print(m)
+
+      data$PANEL <- layout$PANEL[m]
     }
     data
   },
