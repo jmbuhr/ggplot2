@@ -103,8 +103,6 @@ id <- function(.variables, drop = FALSE) {
     return(id_var(.variables[[1]], drop = drop))
   }
   ids <- rev(lapply(.variables, id_var, drop = drop))
-  print('ids')
-  print(ids)
   p <- length(ids)
   ndistinct <- vapply(ids, attr, "n", FUN.VALUE = numeric(1), USE.NAMES = FALSE)
   n <- prod(ndistinct)
@@ -125,6 +123,20 @@ id <- function(.variables, drop = FALSE) {
     attr(res, "n") <- n
     res
   }
+}
+
+#' Create an unique integer id for each unique row in a data.frame
+#' 
+#' fake version of `id` for debugging
+id_like <- function(.variables, drop = FALSE) {
+  unique_rows <- dplyr::distinct(.variables) |>
+    dplyr::mutate(id = dplyr::row_number())
+  n  <- nrow(unique_rows)
+  res <- .variables |>
+    dplyr::left_join(unique_rows) |>
+    dplyr::pull(id)
+  attr(res, "n") <- n
+  res
 }
 #' Count number of occurrences for each unique combination of variables
 #'
@@ -162,18 +174,13 @@ count <- function(df, vars = NULL, wt_var = NULL) {
 # combinations in the two data frames gets the same id
 join_keys <- function(x, y, by) {
   joint <- vec_rbind0(x[by], y[by])
-  keys <- id(joint, drop = TRUE)
+  print('calling id with')
+  print(str(joint))
+  keys <- id_like(joint, drop = TRUE)
+  print('keys:')
+  print(str(keys))
   n_x <- nrow(x)
   n_y <- nrow(y)
-  print(by)
-  print(n_x)
-  print(n_y)
-  print(y)
-
-  print(length(joint))
-
-  print(n_x + seq_len(n_y))
-  print(keys[n_x + seq_len(n_y)])
 
   list(x = keys[seq_len(n_x)], y = keys[n_x + seq_len(n_y)],
        n = attr(keys, "n"))
